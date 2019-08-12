@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package hu.tmx.j2me.morse.media;
 
@@ -16,14 +11,11 @@ import javax.microedition.media.Player;
 import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.ToneControl;
 
-/**
- *
- * @author tmucs
- */
+
 public class MorseCharacterPlayer {
     
     
-	public static final Hashtable ALPHABET;
+    public static final Hashtable ALPHABET;
     
     private static final byte TAH_DURATION = 16;
     private static final byte TIH_DURATION = 8;
@@ -88,7 +80,6 @@ public class MorseCharacterPlayer {
                 }
             }
         });
-        
         
         this.tc = (ToneControl) p.getControl("ToneControl");
     }
@@ -167,13 +158,13 @@ public class MorseCharacterPlayer {
             for (int i = 0; i < letterCode.length(); i++) {
 
                 char beepLength = letterCode.charAt(i);
-                buffer.addElement(new Byte((byte) PITCH)); // tone is constant
+                buffer.addElement(new Byte((byte) PITCH)); 
                 switch (beepLength) {
                     case MORSE_LONG_BEEP:
-                        buffer.addElement(new Byte((byte) TAH_DURATION)); // 1/4 "tah"
+                        buffer.addElement(new Byte((byte) TAH_DURATION)); 
                         break;
                     case MORSE_SHORT_BEEP:
-                        buffer.addElement(new Byte((byte) TIH_DURATION)); // 1/8 "tih"
+                        buffer.addElement(new Byte((byte) TIH_DURATION)); 
                         break;
                 }
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package hu.tmx.j2me.morse;
 
@@ -21,18 +16,16 @@ import javax.microedition.lcdui.TextField;
 import javax.microedition.media.MediaException;
 import javax.microedition.midlet.*;
 
-/**
- * @author tmucs
- */
-public class Midlet extends MIDlet implements CommandListener {
+
+public class MorseMidlet extends MIDlet implements CommandListener {
 
     private TextField input;
     private MorseCharacterPlayer player ;
     private final Random randomizer;
     
-    public Midlet() {
-		this.randomizer = new Random();
-	}
+    public MorseMidlet() {
+        this.randomizer = new Random();
+    }
     
     public void startApp() {
         try {
@@ -41,7 +34,7 @@ public class Midlet extends MIDlet implements CommandListener {
             throw new RuntimeException(ex.getMessage());
         }
         
-        Form form = new Form("");
+        Form form = new Form("Input text to be played");
   
         this.input = new TextField("input", "", 200, TextField.ANY);
         form.append(input);
@@ -77,25 +70,12 @@ public class Midlet extends MIDlet implements CommandListener {
     }
     
     private void generateRandomText() {
-        //char[] choices = new char[MorseCharacterPlayer.ALPHABET.size()];
+
         Vector choices = new Vector();
         for (Enumeration e=MorseCharacterPlayer.ALPHABET.keys(); e.hasMoreElements();) {
         	choices.addElement(e.nextElement());
         }
-        /*
-        int index = 0;
-        for(int i=48; i<=57; i++) {
-        	// from 0-9
-            choices[index] = (char) i;
-            index++;
-        }
-        
-        for (int i = 65; i <= 90; i++) {
-        	// from A-Z
-            choices[index] = (char) i;
-            index++;
-        }
-       */
+
         StringBuffer buffer = new StringBuffer();
         
         for(int i=0; i<5; i++) {
