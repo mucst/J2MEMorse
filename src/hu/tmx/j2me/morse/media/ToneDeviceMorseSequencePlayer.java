@@ -3,7 +3,6 @@ package hu.tmx.j2me.morse.media;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 import javax.microedition.media.Manager;
 import javax.microedition.media.MediaException;
@@ -12,64 +11,13 @@ import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.ToneControl;
 
 
-public class MorseCharacterPlayer {
-    
-    
-    public static final Hashtable ALPHABET;
-    
-    private static final byte TAH_DURATION = 16;
-    private static final byte TIH_DURATION = 8;
-    private static final byte PITCH = 81;
-    private static final byte PITCH_UNKNOWN = 50;
-    private static final char MORSE_LONG_BEEP = '3';
-    private static final char MORSE_SHORT_BEEP = '1';
-    
-    static {
-        
-        ALPHABET = new Hashtable(36);
-        ALPHABET.put("A", "13");
-        ALPHABET.put("B", "3111");
-        ALPHABET.put("C", "3131");
-        ALPHABET.put("D", "311");
-        ALPHABET.put("E", "1");
-        ALPHABET.put("F", "1131");
-        ALPHABET.put("G", "331");
-        ALPHABET.put("H", "1111");
-        ALPHABET.put("I", "11");
-        ALPHABET.put("J", "1333");
-        ALPHABET.put("K", "313");
-        ALPHABET.put("L", "1311");
-        ALPHABET.put("M", "33");
-        ALPHABET.put("N", "31");
-        ALPHABET.put("O", "333");
-        ALPHABET.put("P", "1331");
-        ALPHABET.put("Q", "3313");
-        ALPHABET.put("R", "131");
-        ALPHABET.put("S", "111");
-        ALPHABET.put("T", "3");
-        ALPHABET.put("U", "113");
-        ALPHABET.put("V", "1113");
-        ALPHABET.put("W", "133");
-        ALPHABET.put("X", "3113");
-        ALPHABET.put("Y", "3133");
-        ALPHABET.put("Z", "3311");
-        ALPHABET.put("0", "33333");
-        ALPHABET.put("1", "13333");
-        ALPHABET.put("2", "11333");
-        ALPHABET.put("3", "11133");
-        ALPHABET.put("4", "11113");
-        ALPHABET.put("5", "11111");
-        ALPHABET.put("6", "31111");
-        ALPHABET.put("7", "33111");
-        ALPHABET.put("8", "33311");
-        ALPHABET.put("9", "33331");
-    }
+public class ToneDeviceMorseSequencePlayer implements MorseSequencePlayer {
     
     private final ToneControl tc;
     private final Player p;
     private byte tempo = 60; // TODO make it possible to change this runtime
    
-    public MorseCharacterPlayer() throws IOException, MediaException {
+    public ToneDeviceMorseSequencePlayer() throws IOException, MediaException {
         this.p = Manager.createPlayer(Manager.TONE_DEVICE_LOCATOR);
         this.p.realize();
         p.addPlayerListener(new PlayerListener() {
@@ -140,16 +88,16 @@ public class MorseCharacterPlayer {
         Vector buffer = new Vector();
         
         // actual beep-boops
-        String letterCode = (String) ALPHABET.get(String.valueOf(c).toUpperCase());
+        String letterCode = (String) Constants.ALPHABET.get(String.valueOf(c).toUpperCase());
         
         if (letterCode == null) {
             if (c == ' ') {
                 buffer.addElement(new Byte(ToneControl.SILENCE));
-                buffer.addElement(new Byte((byte) TAH_DURATION));
+                buffer.addElement(new Byte((byte) Constants.TAH_DURATION));
             } else {
                 // unknown character
-                buffer.addElement(new Byte((byte) PITCH_UNKNOWN)); 
-                buffer.addElement(new Byte((byte) TAH_DURATION)); 
+                buffer.addElement(new Byte((byte) Constants.PITCH_UNKNOWN)); 
+                buffer.addElement(new Byte((byte) Constants.TAH_DURATION)); 
             }
             
             
@@ -158,25 +106,25 @@ public class MorseCharacterPlayer {
             for (int i = 0; i < letterCode.length(); i++) {
 
                 char beepLength = letterCode.charAt(i);
-                buffer.addElement(new Byte((byte) PITCH)); 
+                buffer.addElement(new Byte((byte) Constants.PITCH)); 
                 switch (beepLength) {
-                    case MORSE_LONG_BEEP:
-                        buffer.addElement(new Byte((byte) TAH_DURATION)); 
+                    case Constants.MORSE_LONG_BEEP:
+                        buffer.addElement(new Byte((byte) Constants.TAH_DURATION)); 
                         break;
-                    case MORSE_SHORT_BEEP:
-                        buffer.addElement(new Byte((byte) TIH_DURATION)); 
+                    case Constants.MORSE_SHORT_BEEP:
+                        buffer.addElement(new Byte((byte) Constants.TIH_DURATION)); 
                         break;
                 }
 
                 // add short pause after each beep (tih / lenth of 1/8)
                 buffer.addElement(new Byte(ToneControl.SILENCE));
-                buffer.addElement(new Byte((byte) TIH_DURATION));
+                buffer.addElement(new Byte((byte) Constants.TIH_DURATION));
             }
         }
 
         // tah pause after letter
         buffer.addElement(new Byte(ToneControl.SILENCE));
-        buffer.addElement(new Byte((byte) TAH_DURATION));
+        buffer.addElement(new Byte((byte) Constants.TAH_DURATION));
       
         return buffer;
     }

@@ -1,7 +1,8 @@
 
 package hu.tmx.j2me.morse;
 
-import hu.tmx.j2me.morse.media.MorseCharacterPlayer;
+import hu.tmx.j2me.morse.media.Constants;
+import hu.tmx.j2me.morse.media.ToneDeviceMorseSequencePlayer;
 
 import java.util.Enumeration;
 import java.util.Random;
@@ -14,13 +15,14 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.media.MediaException;
+import javax.microedition.media.control.MIDIControl;
 import javax.microedition.midlet.*;
 
 
 public class MorseMidlet extends MIDlet implements CommandListener {
 
     private TextField input;
-    private MorseCharacterPlayer player ;
+    private ToneDeviceMorseSequencePlayer player ;
     private final Random randomizer;
     
     public MorseMidlet() {
@@ -29,8 +31,9 @@ public class MorseMidlet extends MIDlet implements CommandListener {
     
     public void startApp() {
         try {
-            this.player = new MorseCharacterPlayer();
+            this.player = new ToneDeviceMorseSequencePlayer();
         } catch (Exception ex) {
+            // TODO friendlier error
             throw new RuntimeException(ex.getMessage());
         }
         
@@ -72,7 +75,7 @@ public class MorseMidlet extends MIDlet implements CommandListener {
     private void generateRandomText() {
 
         Vector choices = new Vector();
-        for (Enumeration e=MorseCharacterPlayer.ALPHABET.keys(); e.hasMoreElements();) {
+        for (Enumeration e=Constants.ALPHABET.keys(); e.hasMoreElements();) {
         	choices.addElement(e.nextElement());
         }
 
@@ -80,7 +83,7 @@ public class MorseMidlet extends MIDlet implements CommandListener {
         
         for(int i=0; i<5; i++) {
             for(int j=0; j<5; j++) {
-                Object letter = choices.elementAt(randomNumber(0, MorseCharacterPlayer.ALPHABET.size() - 1));
+                Object letter = choices.elementAt(randomNumber(Constants.ALPHABET.size() - 1));
                 buffer.append(letter);
             }
             buffer.append(" ");
@@ -89,7 +92,7 @@ public class MorseMidlet extends MIDlet implements CommandListener {
         input.setString(buffer.toString());
     }
     
-    private int randomNumber(int min, int max) { 
-        return randomizer.nextInt((max - min) + 1) + min;
+    private int randomNumber(int max) { 
+        return Math.abs(randomizer.nextInt() % max);
     }
 }
